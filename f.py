@@ -1,5 +1,5 @@
 #! /bin/env python3
-import pathlib
+from pathlib import Path
 import os
 import sys
 import subprocess
@@ -31,6 +31,8 @@ if not inputs and not existing and not new:
 	subprocess.call(['ls', '-lah'])
 elif not inputs and not new and len(existing) == 1 and os.path.isdir(existing[0]):
 	print("cd functionality not working at the moment.")
+elif len(inputs) == 1 and not new and not existing and not Path(inputs[0]).suffix:
+	subprocess.call(['mkdir', '-p'] + inputs)
 elif len(inputs) == 1 and existing and not new:
 	subprocess.call(['grep', '-r'] + inputs + existing)
 else:
