@@ -1,5 +1,6 @@
 #! /bin/env python3
 import pathlib
+import os
 import sys
 import subprocess
 
@@ -9,13 +10,26 @@ def open(path):
     else:
         subprocess.Popen(['xdg-open', str(path)])
 
+args = list(sys.argv[1:])
 
-args = [pathlib.Path(a).absolute() for a in sys.argv[1:]]
+inputs = []
+existing = []
+new = []
 
-if not args:
-    print('Welcome to f.')
-    exit()
+while args and not os.path.exists(args[0]):
+	inputs.append(args.pop(0))
 
-if all(arg.is_file() for arg in args):
-    for arg in args:
-        open(arg)
+while args and os.path.exists(args[0]):
+	existing.append(args.pop(0))
+
+while args and not os.path.exists(args[0]):
+	new.append(args.pop(0))
+
+assert len(args) == 0, 'Unexpected existing paths at the end of command: ' + ' '.join(args)
+
+if not inputs and not existing and not new:
+	os.system('ls -lah')
+elif not inputs and not new and len(existing) == 1 and os.path.isdir(existing[0]):
+	print("cd functionality not working at the moment.")
+else:
+	print("Unexpected commands. Don't know what to do.")
