@@ -35,5 +35,12 @@ elif len(inputs) == 1 and not new and not existing and not Path(inputs[0]).suffi
 	subprocess.call(['mkdir', '-p'] + inputs)
 elif len(inputs) == 1 and existing and not new:
 	subprocess.call(['grep', '-r'] + inputs + existing)
+elif not inputs and ((len(new) == 1 and not Path(new[0]).suffix) or (not new and len(existing) > 1 and os.path.isdir(existing[-1]))):
+	if new:
+		os.makedirs(new[0])
+	subprocess.call(['mv'] + existing + new)
 else:
 	print("Unexpected commands. Don't know what to do.")
+	print('inputs:', inputs)
+	print('existing:', existing)
+	print('new:', new)
