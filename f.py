@@ -16,6 +16,14 @@ def start_file(path):
 		parts.append(os.getenv('EDITOR'))
 		subprocess.call(parts + existing)
 
+def find_replace(pattern, replacement, paths):
+	command = '%s/{}/{}/gc'.format(*inputs)
+	for path in paths:
+		if path.is_dir():
+			find_replace(pattern, replacement, path.iterdir())
+		else:
+			subprocess.call(['vim', '-c', command, '-c', 'wq', str(path)])
+
 args = list(sys.argv[1:])
 
 inputs = []
@@ -43,6 +51,9 @@ elif len(inputs) == 1 and not new and not existing and not Path(inputs[0]).suffi
 	subprocess.call(['mkdir', '-p'] + inputs)
 elif len(inputs) == 1 and existing and not new:
 	subprocess.call(['grep', '-r'] + inputs + existing)
+elif len(inputs) == 2 and existing and not new:
+	pattern, replacement = inputs
+	find_replace(pattern, replacement, map(Path, existing))
 elif not inputs and ((len(new) == 1 and not Path(new[0]).suffix) or (not new and len(existing) > 1 and os.path.isdir(existing[-1]))):
 	if new:
 		os.makedirs(new[0])
