@@ -13,6 +13,7 @@ More informal principles involve accepting many command line arguments to fine t
 - `ls` -> `f`
 - `cd directory` -> `f directory` (still working on this one)
 - `vim file.txt` -> `f file.txt`
+- `sudo nano /etc/networks` -> `f /etc/networks`
 - `mkdir -p directory/dir` -> `f directory/dir`
 - `mv file1.txt file2.txt directory` -> `f file1.txt file2.txt directory`
 - `tar -xvf file.tar.gz` -> `f file.tar.gz`
