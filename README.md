@@ -17,7 +17,8 @@ More informal principles involve accepting many command line arguments to fine t
 - `mkdir -p directory/dir` -> `f directory/dir`
 - `mv file1.txt file2.txt directory` -> `f file1.txt file2.txt directory`
 - `tar -xvf file.tar.gz` -> `f file.tar.gz`
-- `zip -r directory.zip directory` -> `f directory`
+- `zip -r directory.zip directory` -> `f directory directory.zip`
 - `unzip directory.zip` -> `f directory.zip
 - `grep "pattern" file1.txt file2.txt` -> `f "pattern" file1.txt file2.txt`
 - `grep -r "pattern" directory` -> `f "pattern" directory`
+

@@ -61,6 +61,8 @@ elif len(inputs) == 1 and not new and not existing and not Path(inputs[0]).suffi
 		os.makedirs(inputs[0])
 	except PermissionError:
 		subprocess.call(['sudo', 'mkdir', '-p', inputs[0]])
+elif len(new) == 1 and existing and not inputs and new[0].endswith('.zip'):
+	subprocess.call(['zip', '-r'] + new + existing)
 elif len(inputs) == 1 and existing and not new:
 	subprocess.call(['grep', '-r'] + inputs + existing)
 elif len(inputs) == 2 and existing and not new:
