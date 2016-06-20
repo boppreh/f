@@ -4,25 +4,26 @@ import os
 import sys
 import subprocess
 
+def call_on_file(command_parts, file, async=False):
+	command_parts = list(command_parts) # Don't modify the original, just in case.
+	function = subprocess.Popen if async else subprocess.call
+	if Path(file).owner() == 'root':
+		command_parts.insert(0, 'sudo')
+	function(command_parts + [file])
+
 def start_file(path):
-	parts = []
-	if Path(path).owner() == 'root':
-		parts.append('sudo')
-	
 	if subprocess.check_output(['file', '-i', path]).endswith(b'charset=binary\n'):
-		parts.append('xdg-open')
-		subprocess.Popen(parts + existing)
+		call_on_file(['xdg-open'], path, async=True)
 	else:
-		parts.append(os.getenv('EDITOR'))
-		subprocess.call(parts + existing)
+		call_on_file([os.getenv('EDITOR')], path)
 
 def find_replace(pattern, replacement, paths):
 	command = '%s/{}/{}/gc'.format(*inputs)
-	for path in paths:
+	for path in map(Path, paths):
 		if path.is_dir():
-			find_replace(pattern, replacement, path.iterdir())
+			find_replace(pattern, replacement, map(str, path.iterdir()))
 		else:
-			subprocess.call(['vim', '-c', command, '-c', 'wq', str(path)])
+			call_on_file(['vim', '-c', command, '-c', 'wq'], path)
 
 args = list(sys.argv[1:])
 
@@ -48,7 +49,10 @@ elif not inputs and not new and len(existing) == 1 and os.path.isdir(existing[0]
 elif not inputs and not new and len(existing) == 1 and os.path.isfile(existing[0]):
 	start_file(existing[0])
 elif len(inputs) == 1 and not new and not existing and not Path(inputs[0]).suffix:
-	subprocess.call(['mkdir', '-p'] + inputs)
+	try:
+		os.makedirs(inputs[0])
+	except PermissionError:
+		subprocess.call(['sudo', 'mkdir', '-p', inputs[0]])
 elif len(inputs) == 1 and existing and not new:
 	subprocess.call(['grep', '-r'] + inputs + existing)
 elif len(inputs) == 2 and existing and not new:
