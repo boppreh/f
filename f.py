@@ -45,7 +45,15 @@ assert len(args) == 0, 'Unexpected existing paths at the end of command: ' + ' '
 if not inputs and not existing and not new:
 	subprocess.call(['ls', '-lah'])
 elif not inputs and not new and len(existing) == 1 and os.path.isdir(existing[0]):
-	print("cd functionality not working at the moment.")
+	call_on_file(['ls', '-lah', '--color', 'always'], existing[0])
+elif not inputs and not new and len(existing) == 1 and existing[0].endswith(('.zip', '.tar.gz', '.tar.bz2', '.7z', '.rar')):
+	file, = existing
+	if file.endswith('.zip'):
+		call_on_file(['zipinfo'], file)
+		if input('Extract? [y/N]')[0].lower() == 'y':
+			call_on_file(['unzip'], file)
+	else:
+		raise ValueError(file)
 elif not inputs and not new and len(existing) == 1 and os.path.isfile(existing[0]):
 	start_file(existing[0])
 elif len(inputs) == 1 and not new and not existing and not Path(inputs[0]).suffix:
