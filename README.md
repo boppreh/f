@@ -12,31 +12,20 @@ More informal principles involve accepting many command line arguments to fine t
 
     f [pattern [replacement]] [existing [...]] [new]
 
-Directories:
-
-- `f` -> `ls` 
-- `f directory` -> `ls directory` (probably will be changed to `cd directory` in the future)
-- `f directory/new` -> `mkdir -p directory/new`
-
-File management:
-
-- `f file.txt` -> `vim file.txt`
-- `f /etc/networks` -> `sudo vim /etc/networks`
-- `f file1.txt file2.txt directory` -> `mv file1.txt file2.txt directory`
-- `f file1.txt file2.txt directory/new` -> `mkdir directory/new && mv file1.txt file2.txt directory/new`
-
-Compressing and extracting:
-
-- `f file.tar.gz` -> `tar -xvf file.tar.gz`
-- `f file.zip` -> `unzip file.zip`
-- `f directory .zip` -> `zip -r directory.zip directory`
-
-File conversion:
-
-- `f image.png .jpg` -> `convert image.png image.jpg`
-- `f text.txt .html` -> `pandoc -o text.html text.txt`
-
-Search and replace:
-- `f "pattern" file1.txt file2.txt` -> `grep "pattern" file1.txt file2.txt`
-- `f "pattern" directory` -> `grep -r "pattern" directory`
-
+| `f` command | behaves like |
+|-----|------|
+| `f` | `ls` |
+| `f directory` | `ls directory` (probably will be changed to `cd directory` in the future) |
+| `f directory/new` | `mkdir -p directory/new` |
+| `f file.txt` | `vim file.txt` |
+| `f /etc/networks` | `sudo vim /etc/networks` |
+| `f file1.txt file2.txt directory` | `mv file1.txt file2.txt directory` |
+| `f file1.txt file2.txt directory/new` | `mkdir directory/new && mv file1.txt file2.txt directory/new` |
+| `f file.tar.gz` | `tar -xvf file.tar.gz` |
+| `f file.zip` | `unzip file.zip` |
+| `f directory .zip` | `zip -r directory.zip directory` |
+| `f image.png .jpg` | `convert image.png image.jpg` |
+| `f text.txt .html` | `pandoc -o text.html text.txt` |
+| `f "pattern" file1.txt file2.txt` | `grep "pattern" file1.txt file2.txt` |
+| `f "pattern" directory` | `grep -r "pattern" directory` |
+| `f "pattern" "replacement" directory` | interactive find & replace in `directory` |
