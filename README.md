@@ -8,17 +8,35 @@
 
 More informal principles involve accepting many command line arguments to fine tune execution, outputting as little as possible, not second guessing the user.
 
-`f` performs file management while doing the exact opposite of each of those principles. It replaces many of the standard tools:
+`f` performs file management while doing the exact opposite of each of those principles. It is chatty, doesn't read from stdin, second guesses the user, does too much, has no flags for configuration. It is also surprising useful, replacing (or wrapping) many standard tools.
 
-- `ls` -> `f`
-- `cd directory` -> `f directory` (still working on this one)
-- `vim file.txt` -> `f file.txt`
-- `sudo nano /etc/networks` -> `f /etc/networks`
-- `mkdir -p directory/dir` -> `f directory/dir`
-- `mv file1.txt file2.txt directory` -> `f file1.txt file2.txt directory`
-- `tar -xvf file.tar.gz` -> `f file.tar.gz`
-- `zip -r directory.zip directory` -> `f directory directory.zip`
-- `unzip directory.zip` -> `f directory.zip
-- `grep "pattern" file1.txt file2.txt` -> `f "pattern" file1.txt file2.txt`
-- `grep -r "pattern" directory` -> `f "pattern" directory`
+    f [pattern [replacement]] [existing [...]] [new]
+
+Directories:
+
+- `f` -> `ls` 
+- `f directory` -> `ls directory` (probably will be changed to `cd directory` in the future)
+- `f directory/new` -> `mkdir -p directory/new`
+
+File management:
+
+- `f file.txt` -> `vim file.txt`
+- `f /etc/networks` -> `sudo vim /etc/networks`
+- `f file1.txt file2.txt directory` -> `mv file1.txt file2.txt directory`
+- `f file1.txt file2.txt directory/new` -> `mkdir directory/new && mv file1.txt file2.txt directory/new`
+
+Compressing and extracting:
+
+- `f file.tar.gz` -> `tar -xvf file.tar.gz`
+- `f file.zip` -> `unzip file.zip`
+- `f directory .zip` -> `zip -r directory.zip directory`
+
+File conversion:
+
+- `f image.png .jpg` -> `convert image.png image.jpg`
+- `f text.txt .html` -> `pandoc -o text.html text.txt`
+
+Search and replace:
+- `f "pattern" file1.txt file2.txt` -> `grep "pattern" file1.txt file2.txt`
+- `f "pattern" directory` -> `grep -r "pattern" directory`
 
