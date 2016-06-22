@@ -25,6 +25,24 @@ def find_replace(pattern, replacement, paths):
 		else:
 			call_on_file(['vim', '-c', command, '-c', 'wq'], path)
 
+def convert(file, new_file):
+	if os.path.isdir(new_file):
+		subprocess.call(['mv', file, new_file])
+
+	if new_file in image_extensions + doc_extensions:
+		new_file = str(Path(file).with_suffix(new_file))
+
+	file_ext = Path(file).suffix
+	new_file_ext = Path(new_file).suffix
+	if file_ext in image_extensions and new_file_ext in image_extensions:
+		subprocess.call(['convert', file, new_file])
+	elif file_ext in doc_extensions and new_file_ext in doc_extensions:
+		subprocess.call(['pandoc', '-o', new_file, file])
+	else:
+		os.makedirs(new_file)
+		subprocess.call(['mv', file, new_file])
+
+
 image_extensions = ['.jpg', '.jpeg', '.gif', '.png']
 doc_extensions = ['.txt', '.md', '.rst', '.html', '.pdf', '.docx', '.odt']
 
@@ -70,10 +88,12 @@ def invoke(args):
 	elif len(inputs) == 2 and existing and not new:
 		pattern, replacement = inputs
 		find_replace(pattern, replacement, map(Path, existing))
-	elif not inputs and ((len(new) == 1 and not Path(new[0]).suffix) or (not new and len(existing) > 1 and os.path.isdir(existing[-1]))):
-		if new:
-			os.makedirs(new[0])
-		subprocess.call(['mv'] + existing + new)
+	elif not inputs and not new and existing and os.path.isdir(existing[-1]):
+		for file in existing[:-1]:
+			subprocess.call(['mv', file, existing[-1]])
+	elif not inputs and len(new) == 1 and existing:
+		for file in existing:
+			convert(file, new[0])
 	else:
 		print("Unexpected commands. Don't know what to do.")
 		print('inputs:', inputs)
