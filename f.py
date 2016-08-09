@@ -9,7 +9,7 @@ def call_on_file(command_parts, file, async=False):
 	function = subprocess.Popen if async else subprocess.call
 	if Path(file).owner() == 'root':
 		command_parts.insert(0, 'sudo')
-	function(command_parts + [file])
+	function(command_parts + [str(file)])
 
 def start_file(path):
 	if subprocess.check_output(['file', '-i', path]).endswith(b'charset=binary\n'):
