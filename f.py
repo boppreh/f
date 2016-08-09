@@ -3,6 +3,7 @@ from pathlib import Path
 import os
 import sys
 import subprocess
+import re
 
 def call_on_file(command_parts, file, async=False):
     command_parts = list(command_parts) # Don't modify the original, just in case.
@@ -18,12 +19,26 @@ def start_file(path):
         call_on_file([os.getenv('EDITOR')], path)
 
 def find_replace(pattern, replacement, paths):
-    command = '%s/{}/{}/gc'.format(pattern, replacement)
     for path in map(Path, paths):
         if path.is_dir():
-            find_replace(pattern, replacement, map(str, path.iterdir()))
+            yield from find_replace(pattern, replacement, map(str, path.iterdir()))
         else:
-            call_on_file(['vim', '-c', command, '-c', 'wq'], path)
+            with path.open() as f:
+                contents = f.read()
+            # Yep, I know this is very inefficient. This function is not
+            # supposed to be used on larger files, and we are generally
+            # willing to pay for better user experience.
+            matches = len(re.findall(pattern, contents))
+            with path.open('w') as f:
+                f.write(re.sub(pattern, replacement, contents))
+            yield path, matches
+
+            # Alternative: use vim to find replace.
+            # Downside: every single file requires input from the user,
+            # the interface is very confusing, errors are shown in a scary way,
+            # and it's hard to cancel.
+            #command = '%s/{}/{}/gc'.format(pattern, replacement)
+            #call_on_file(['vim', '-c', command, '-c', 'wq'], path)
 
 def convert(file, new_file):
     if os.path.isdir(new_file):
@@ -87,7 +102,8 @@ def invoke(args):
         subprocess.call(['grep', '-r'] + inputs + existing)
     elif len(inputs) == 2 and existing and not new:
         pattern, replacement = inputs
-        find_replace(pattern, replacement, map(Path, existing))
+        for path, matches in find_replace(pattern, replacement, map(Path, existing)):
+            print('{} - {} matches'.format(path, matches))
     elif not inputs and not new and existing and os.path.isdir(existing[-1]):
         for file in existing[:-1]:
             subprocess.call(['mv', file, existing[-1]])
