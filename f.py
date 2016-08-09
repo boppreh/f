@@ -18,7 +18,7 @@ def start_file(path):
 		call_on_file([os.getenv('EDITOR')], path)
 
 def find_replace(pattern, replacement, paths):
-	command = '%s/{}/{}/gc'.format(*inputs)
+	command = '%s/{}/{}/gc'.format(pattern, replacement)
 	for path in map(Path, paths):
 		if path.is_dir():
 			find_replace(pattern, replacement, map(str, path.iterdir()))
