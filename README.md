@@ -33,4 +33,4 @@ More informal principles involve accepting many command line arguments to fine t
 
 To install `f` on your terminal just add the following line to your `~/.bashrc`:
 
-  [ -f ~/f/init.sh ] && . ~/f/init.sh
+    [ -f ~/f/init.sh ] && . ~/f/init.sh
