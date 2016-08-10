@@ -82,7 +82,7 @@ def invoke(args):
     assert len(args) == 0, 'Unexpected existing paths at the end of command: ' + ' '.join(args)
 
     if not inputs and not existing and not new:
-        subprocess.call(['ls', '-lah'])
+        subprocess.call(['ls', '-lah', '--color=always'])
         if os.path.isdir('.git'):
             subprocess.call(['git', 'status'])
     elif not inputs and not new and len(existing) == 1 and os.path.isdir(existing[0]):
