@@ -24,7 +24,11 @@ def find_replace(pattern, replacement, paths):
             yield from find_replace(pattern, replacement, map(str, path.iterdir()))
         else:
             with path.open() as f:
-                contents = f.read()
+                try:
+                    contents = f.read()
+                except UnicodeDecodeError:
+                    continue
+
             # Yep, I know this is very inefficient. This function is not
             # supposed to be used on larger files, and we are generally
             # willing to pay for better user experience.
