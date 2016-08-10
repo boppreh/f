@@ -29,7 +29,7 @@ More informal principles involve accepting many command line arguments to fine t
 | `f text.txt .html` | `pandoc -o text.html text.txt` |
 | `f "pattern" file1.txt file2.txt` | `grep "pattern" file1.txt file2.txt` |
 | `f "pattern" directory` | `grep -r "pattern" directory` |
-| `f "pattern" "replacement" directory` | interactive find & replace in `directory` |
+| `f "pattern" "replacement" directory` | find & replace in `directory` |
 
 To install `f` on your terminal just add the following line to your `~/.bashrc`:
 
