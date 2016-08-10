@@ -30,3 +30,7 @@ More informal principles involve accepting many command line arguments to fine t
 | `f "pattern" file1.txt file2.txt` | `grep "pattern" file1.txt file2.txt` |
 | `f "pattern" directory` | `grep -r "pattern" directory` |
 | `f "pattern" "replacement" directory` | interactive find & replace in `directory` |
+
+To install `f` on your terminal just add the following line to your `~/.bashrc`:
+
+  [ -f ~/f/init.sh ] && . ~/f/init.sh
