@@ -79,6 +79,8 @@ def invoke(args):
 
     if not inputs and not existing and not new:
         subprocess.call(['ls', '-lah'])
+        if os.path.isdir('.git'):
+            subprocess.call(['git', 'status'])
     elif not inputs and not new and len(existing) == 1 and os.path.isdir(existing[0]):
         call_on_file(['ls', '-lah', '--color', 'always'], existing[0])
     elif not inputs and not new and len(existing) == 1 and existing[0].endswith(('.zip', '.tar.gz', '.tar.bz2', '.7z', '.rar')):
