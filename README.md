@@ -14,9 +14,9 @@ More informal principles involve accepting many command line arguments to fine t
 
 | `f` command | behaves like |
 |-----|------|
-| `f` | `ls` |
-| `f directory` (with `inith.sh`) | `cd directory` |
-| `f directory` (without `inith.sh`) | `ls directory` and `git status` if applicable |
+| `f` | `ls; git status` |
+| `f directory` (with `inith.sh`) | `cd directory; ls; git status` |
+| `f directory` (without `inith.sh`) | `ls directory; git status` |
 | `f directory/new` | `mkdir -p directory/new` |
 | `f file.txt` | `vim file.txt` |
 | `f /etc/networks` | `sudo vim /etc/networks` |
