@@ -48,6 +48,9 @@ def convert(file, new_file):
     if os.path.isdir(new_file):
         subprocess.call(['mv', file, new_file])
 
+    if '.' + new_file in image_extensions + doc_extensions:
+        new_file = '.' + new_file
+
     if new_file in image_extensions + doc_extensions:
         new_file = str(Path(file).with_suffix(new_file))
 
