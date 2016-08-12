@@ -85,11 +85,11 @@ def invoke(args):
     assert len(args) == 0, 'Unexpected existing paths at the end of command: ' + ' '.join(args)
 
     if not inputs and not existing and not new:
-        subprocess.call(['ls', '-lah', '--color=always'])
+        subprocess.call(['ls', '-lah', '--color=auto'])
         if os.path.isdir('.git'):
             subprocess.call(['git', 'status'])
     elif not inputs and not new and len(existing) == 1 and os.path.isdir(existing[0]):
-        call_on_file(['ls', '-lah', '--color', 'always'], existing[0])
+        call_on_file(['ls', '-lah', '--color=auto'], existing[0])
     elif not inputs and not new and len(existing) == 1 and existing[0].endswith(('.zip', '.tar.gz', '.tar.bz2', '.7z', '.rar')):
         file, = existing
         if file.endswith('.zip'):
@@ -108,7 +108,7 @@ def invoke(args):
     elif len(new) == 1 and existing and not inputs and new[0].endswith('.zip'):
         subprocess.call(['zip', '-r'] + new + existing)
     elif len(inputs) == 1 and existing and not new:
-        subprocess.call(['grep', '-r'] + inputs + existing)
+        subprocess.call(['grep', '-I', '--color=auto', '--exclude-dir=.git', '-r'] + inputs + existing)
     elif len(inputs) == 2 and existing and not new:
         pattern, replacement = inputs
         for path, matches in find_replace(pattern, replacement, map(Path, existing)):
