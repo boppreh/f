@@ -94,7 +94,7 @@ def invoke(args):
         file, = existing
         if file.endswith('.zip'):
             call_on_file(['zipinfo'], file)
-            if input('\n=====\nExtract? [y/N]')[0].lower() == 'y':
+            if input('\n=====\nExtract? [y/N]').lower().startswith('y'):
                 call_on_file(['unzip'], file)
         else:
             raise ValueError(file)
