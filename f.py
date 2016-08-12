@@ -64,6 +64,7 @@ def convert(file, new_file):
         os.makedirs(new_file)
         subprocess.call(['mv', file, new_file])
 
+DEFAULT_LS = ['ls', '-oAhFv', '--color=auto']
 
 image_extensions = ['.jpg', '.jpeg', '.gif', '.png']
 doc_extensions = ['.txt', '.md', '.rst', '.html', '.pdf', '.docx', '.odt']
@@ -85,11 +86,11 @@ def invoke(args):
     assert len(args) == 0, 'Unexpected existing paths at the end of command: ' + ' '.join(args)
 
     if not inputs and not existing and not new:
-        subprocess.call(['ls', '-lah', '--color=auto'])
+        subprocess.call(DEFAULT_LS)
         if os.path.isdir('.git'):
             subprocess.call(['git', 'status'])
     elif not inputs and not new and len(existing) == 1 and os.path.isdir(existing[0]):
-        call_on_file(['ls', '-lah', '--color=auto'], existing[0])
+        call_on_file(DEFAULT_LS, existing[0])
     elif not inputs and not new and len(existing) == 1 and existing[0].endswith(('.zip', '.tar.gz', '.tar.bz2', '.7z', '.rar')):
         file, = existing
         if file.endswith('.zip'):
