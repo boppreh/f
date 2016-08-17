@@ -57,9 +57,15 @@ def convert(file, new_file):
     file_ext = Path(file).suffix
     new_file_ext = Path(new_file).suffix
     if file_ext in image_extensions and new_file_ext in image_extensions:
-        subprocess.call(['convert', file, new_file])
+        try:
+            subprocess.call(['convert', file, new_file])
+        except FileNotFoundError:
+            print('Conversion failed. You need ImageMagick installed for this (`convert` binary).')
     elif file_ext in doc_extensions and new_file_ext in doc_extensions:
-        subprocess.call(['pandoc', '-o', new_file, file])
+        try:
+            subprocess.call(['pandoc', '-o', new_file, file])
+        except FileNotFoundError:
+            print('Conversion failed. You need pandoc installed for this.')
     else:
         os.makedirs(new_file)
         subprocess.call(['mv', file, new_file])
