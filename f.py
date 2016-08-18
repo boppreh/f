@@ -112,8 +112,14 @@ def invoke(args):
             os.makedirs(inputs[0])
         except PermissionError:
             subprocess.call(['sudo', 'mkdir', '-p', inputs[0]])
-    elif len(new) == 1 and existing and not inputs and new[0].endswith('.zip'):
-        subprocess.call(['zip', '-r'] + new + existing)
+    elif len(new) == 1 and existing and not inputs and new[0].endswith('.zip') or new[0] == 'zip':
+        new_file, = new
+        file, = existing
+        if new_file == 'zip':
+            new_file = '.' + new_file
+        if new_file == '.zip':
+            new_file = str(Path(file).with_suffix(new_file))
+        subprocess.call(['zip', '-r'] + [new_file] + [file])
     elif len(inputs) == 1 and existing and not new:
         subprocess.call(['grep', '-I', '--color=auto', '--exclude-dir=.git', '-r'] + inputs + existing)
     elif len(inputs) == 2 and existing and not new:
