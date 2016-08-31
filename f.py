@@ -121,7 +121,12 @@ def invoke(args):
             new_file = str(Path(file).with_suffix(new_file))
         subprocess.call(['zip', '-r'] + [new_file] + [file])
     elif len(inputs) == 1 and existing and not new:
-        subprocess.call(['grep', '-I', '--color=auto', '--exclude-dir=.git', '-r'] + inputs + existing)
+        grep = subprocess.Popen(['grep', '-I', '--color=auto', '--exclude-dir=.git', '-r'] + inputs + existing, stdout=subprocess.PIPE)
+        tee = subprocess.Popen(['tee', '/dev/tty'], stdin=grep.stdout, stdout=subprocess.PIPE)
+        linecount = int(subprocess.check_output(['wc', '-l'], stdin=tee.stdout))
+        grep.wait()
+        tee.wait()
+        print('{:,} matches'.format(linecount))
     elif len(inputs) == 2 and existing and not new:
         pattern, replacement = inputs
         for path, matches in find_replace(pattern, replacement, map(Path, existing)):
