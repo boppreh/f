@@ -84,7 +84,7 @@ def invoke(args):
         inputs.append(args.pop(0))
 
     while args and os.path.exists(args[0]):
-        existing.append(args.pop(0))
+        existing.append(os.path.abspath(args.pop(0)))
 
     while args and not os.path.exists(args[0]):
         new.append(args.pop(0))
@@ -114,12 +114,12 @@ def invoke(args):
             subprocess.call(['sudo', 'mkdir', '-p', inputs[0]])
     elif len(new) == 1 and existing and not inputs and (new[0].endswith('.zip') or new[0] == 'zip'):
         new_file, = new
-        file, = existing
         if new_file == 'zip':
             new_file = '.' + new_file
         if new_file == '.zip':
-            new_file = str(Path(file).with_suffix(new_file))
-        subprocess.call(['zip', '-r'] + [new_file] + [file])
+            base_name = existing[0] if len(existing) == 1 else os.path.basename(os.path.commonpath(existing))
+            new_file = str(Path(base_name).with_suffix(new_file))
+        subprocess.call(['zip', '-r'] + [new_file] + existing)
     elif len(inputs) == 1 and existing and not new:
         grep = subprocess.Popen(['grep', '-I', '--color=auto', '--exclude-dir=.git', '-r'] + inputs + existing, stdout=subprocess.PIPE)
         tee = subprocess.Popen(['tee', '/dev/tty'], stdin=grep.stdout, stdout=subprocess.PIPE)
