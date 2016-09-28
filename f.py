@@ -101,6 +101,7 @@ def invoke(args):
         file, = existing
         if file.endswith('.zip'):
             call_on_file(['zipinfo'], file)
+            # TODO: create a folder when extracting individual files.
             if input('\n=====\nExtract? [y/N]').lower().startswith('y'):
                 call_on_file(['unzip'], file)
         else:
